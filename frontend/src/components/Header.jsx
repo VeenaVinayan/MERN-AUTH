@@ -3,12 +3,12 @@ import {FaSignInAlt,FaSignOutAlt} from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux';
 import React from 'react'
 import { LinkContainer } from 'react-router-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useLogoutMutation } from '../slices/usersApiSlice';
 import {logout} from '../slices/authSlice';
-
+import { toast } from 'react-toastify';
+import ProfileScreen from '../screens/ProfileScreen';
 function Header() {
-
   const {userInfo} = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate= useNavigate();
@@ -18,12 +18,11 @@ function Header() {
       try {
          await logoutApiCall().unwrap();
          dispatch(logout());
-         navigate('/');
+         navigate('/login');
       }catch(err){
-         console.log(err);
+        toast.error();
       }
   }
-
   return (
     <header>
         <Navbar bg='dark' variant='dark' expand='lg' collapseOnSelect>
@@ -39,7 +38,7 @@ function Header() {
                            <NavDropdown title={userInfo.name} id='username'>
                               <LinkContainer to='/profile'>
                                  <NavDropdown.Item>
-                                   Profile
+                                   Update Profile
                                  </NavDropdown.Item>
                               </LinkContainer>
                               <NavDropdown.Item onClick={logoutHandler}>

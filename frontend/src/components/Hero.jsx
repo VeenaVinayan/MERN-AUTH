@@ -22,12 +22,15 @@ const Hero = () => {
                        Register
                      </Button>
                    </LinkContainer>
-                   
+                   <LinkContainer to='/admin'>
+                     <Button variant='secondary'>
+                       Admin
+                     </Button>
+                   </LinkContainer>
                 </div>
             </Card>
         </Container>
     </div>
   )
 }
-
 export default Hero

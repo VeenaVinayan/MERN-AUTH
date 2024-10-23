@@ -2,21 +2,32 @@
 import asyncHandler from 'express-async-handler';
 import User from '../models/userModel.js';
 import generateToken from '../utils/generateToken.js';
+import bcrypt from 'bcryptjs';
 
 const registerUser = asyncHandler(async(req,res) => {
     const {name, email, password } = req.body;
-    console.log('Inside register user !!');
-    console.log(req.body);
+    console.log(name);
+    
     const userExists = await User.findOne({email})
+    console.log(userExists);
+    
     if(userExists){
         res.status(400);
         throw new Error('User already Exists... !!');
     }
+    const salt = await bcrypt.genSalt(10);
+    console.log(salt);
+    
+    const pwd = await  bcrypt.hash(password,salt);
+    console.log("pwd",pwd);
+    
     const user = await User.create({
          name,
          email,
-         password,
+         password:pwd,
     });
+    console.log("user",user);
+    
     if(user){
              generateToken(res,user._id);
              res.status(201).json({
@@ -29,21 +40,18 @@ const registerUser = asyncHandler(async(req,res) => {
         throw new Error('Invalid User Data !');
     }
 });
-
 //Get user Profile
 // GET /api/user/profile
-// access private
 const logoutUser = asyncHandler(async(req,res) => {
     res.cookie('jwt','',{
         httpOnly:true,
         expires:new Date(0),
     });
-    res.status(200).json({message:'Logged User !!'});
+    res.status(200).json({message:'LoggedOut User !!'});
 });
 //Get user Profile
 // GET /api/user/profile
 // access private
-
 const getUserProfile = asyncHandler(async(req,res) => {
     console.log('Inside get user Profile !');
     const user ={
@@ -54,14 +62,14 @@ const getUserProfile = asyncHandler(async(req,res) => {
     res.status(200).json(user);
 });
 //Get user Profile
-// PUT /api/user/profileUpdata
+//api/user/profileUpdata
+
 const updateUserProfile = asyncHandler(async(req,res) => {
     console.log('Inside get user Profile--Update !');
     const user = await User.findById(req.user._id);
     if(user){
          user.name = req.body.name || user.name;
          user.email = req.body.email || user.email;
-    
     if(req.body.password){
         user.password = req.body.password;
     }
@@ -72,11 +80,11 @@ const updateUserProfile = asyncHandler(async(req,res) => {
 }
 });
 const authUser = asyncHandler(async(req,res) => {
-
     const {email,password} =req.body;
-    console.log(req.body);
+    console.log("Indside auth user ::",req.body)
     const user =await User.findOne({email});
-    if(user && (await user.matchPassword(password))){
+    const pwd = await bcrypt.compare(password,user.password);
+    if(user && pwd){
          generateToken(res,user._id);
          res.status(201).json({
              _id:user._id,
@@ -88,6 +96,12 @@ const authUser = asyncHandler(async(req,res) => {
         throw new Error('Invalid credentials !!');
     }
 });
+const setProfileImage = asyncHandler(async(req,res) => {
+    console.log('Update Profile !!!!');
+    const image = req.body.image;
+    const id = req.user._id; 
+    await User.findByIdAndUpdate(id,{image:image});
+});
 
 export  {
     authUser,
@@ -95,4 +109,5 @@ export  {
     logoutUser,
     getUserProfile,
     updateUserProfile,
+    setProfileImage,
 }

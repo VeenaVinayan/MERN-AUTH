@@ -36,8 +36,7 @@ const RegisterScreen = () => {
         }else{
              try{
                   const res = await register({name,email, password}).unwrap();
-                  dispatch(setCredentials({...res}));
-                  navigate('/');
+                  navigate('/login');
              }catch(err){
                  toast.error(err?. data?.messaage || err.error);
              }
@@ -47,7 +46,7 @@ const RegisterScreen = () => {
         <FormContainer>
             <h1> Sign UP</h1>
             <Form onSubmit={submitHandler}>
-             <Form.Group className='my-2' controlId='email'>
+             <Form.Group className='my-2' controlId='name'>
                     <Form.Label>Full Name </Form.Label>
                     <Form.Control  
                             type='text'

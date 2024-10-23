@@ -6,5 +6,4 @@ const HomeScreen = () => {
     <Hero />
   )
 }
-
 export default HomeScreen
