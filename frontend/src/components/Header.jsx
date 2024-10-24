@@ -35,16 +35,36 @@ function Header() {
                      <Nav className='ms-auto'>
                        { userInfo ? (
                          <>
-                           <NavDropdown title={userInfo.name} id='username'>
+                          <NavDropdown title={userInfo.name} id='username'>
+                            { userInfo.name !== 'Admin' && ( 
+                              <> 
                               <LinkContainer to='/profile'>
                                  <NavDropdown.Item>
                                    Update Profile
                                  </NavDropdown.Item>
                               </LinkContainer>
+                              <LinkContainer to='/viewProfile'>
+                                 <NavDropdown.Item>
+                                   Profile
+                                 </NavDropdown.Item>
+                              </LinkContainer>
+                              </>
+                              ) }
+                              { userInfo.name === 'Admin' && (
+                                 <>
+                                  <LinkContainer to='/dashboard'>
+                                  <NavDropdown.Item>
+                                    Dashboard
+                                  </NavDropdown.Item>
+                               </LinkContainer>
+                               </>
+                              )}
                               <NavDropdown.Item onClick={logoutHandler}>
                                  Logout
                               </NavDropdown.Item>
+                            
                            </NavDropdown>
+                         
                          </>
                        ) : ( 
                         <>

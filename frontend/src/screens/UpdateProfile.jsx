@@ -17,18 +17,19 @@ const UpdateProfile = () => {
   const [ name, setName] = useState();  
   const navigate = useNavigate();
 
-  const [ UpdateProfile, { isLoading }] = useUpdateProfileMutation();
+  const [ updateProfile, { isLoading }] = useUpdateProfileMutation();
  
    useEffect( () =>{
          setEmail(userInfo.email);
          setName(userInfo.name);
-   },[userInfo.email,userInfo.name]);  
+   },[userInfo.email,userInfo.name,setCredentials]);  
 
   const submitHandler = async (e) => {
        e.preventDefault();
       try{
-        const res = await UpdateProfile(name,email).unwrap(); 
-        setCredentials({...res});
+        const res = await updateProfile({name,email}).unwrap(); 
+        console.log(res);
+        dispatch(setCredentials({ ...res }));
         toast.success(" Profile Successfully Updated !!! ");
         navigate('/viewProfile');
       }catch(err){
@@ -56,15 +57,8 @@ const UpdateProfile = () => {
                                 onChange={(e) => setEmail(e.target.value)}>
                   </Form.Control>
               </Form.Group>
-              {/* <Form.Group className="my-2" controlId="image" >
-                  <Form.Label> Image </Form.Label>
-                  <Form.Control 
-                                type='file'
-                                value={}
-                                onChange={}>
-                  </Form.Control>
-              </Form.Group> */}
-              { isLoading &&  <Loader /> }
+             { isLoading &&  <Loader /> }
+
               <Button type='submit'>Update Profile</Button> 
           </Form>
        </FormContainer>

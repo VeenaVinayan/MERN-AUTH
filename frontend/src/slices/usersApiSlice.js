@@ -66,6 +66,22 @@ export const userApiSlice = apiSlice.injectEndpoints({
            credentials:'include',
       })
    }),
+   addUser: builder.mutation({
+       query: (data) => ({
+          url: `${ADMIN_URL}/addUser`,
+          method:'POST',
+          body:data,
+          credentials:'include',
+       })
+   }),
+   updateUserProfile: builder.mutation({
+       query: (data) =>({
+          url : `${ADMIN_URL}/updateUserProfile`,
+          method:'PATCH',
+          body:data,
+          credentials: 'include',
+       })
+   }) 
   }) 
 });
 
@@ -75,4 +91,6 @@ export const { useLoginMutation,useLogoutMutation,
    useDashboardMutation, 
    useProfileImageMutation, 
    useUpdateProfileMutation,
-   useDeleteUserMutation     } = userApiSlice;
+   useDeleteUserMutation,
+   useAddUserMutation,
+   useUpdateUserProfileMutation       } = userApiSlice;

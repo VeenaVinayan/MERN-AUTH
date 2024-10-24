@@ -17,12 +17,16 @@ import PrivateRoute  from './components/PrivateRoute.jsx';
 import DashBoard from './screens/DashBoard.jsx';
 import AdminLogin from './screens/AdminLogin.jsx';
 import UpdateProfile from './screens/UpdateProfile.jsx';
+import AddUserScreen from './screens/AddUserScreen.jsx';
+import EditUserScreen from './screens/EditUserScreen.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
       <Route path='/' element={<App />} >
           <Route path='/admin' element={<AdminLogin />} />
           <Route path='/dashboard' element={<DashBoard />} />
+          <Route path='/addUser' element={< AddUserScreen/>} />
+          <Route path='/editUser' element={< EditUserScreen />} />
           <Route index={true} path='/' element={<HomeScreen />} />
           <Route path="/login" element={<LoginScreen />} />
           <Route path='/register' element={<RegisterScreen />} />

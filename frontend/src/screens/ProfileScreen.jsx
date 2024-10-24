@@ -39,47 +39,48 @@ const ProfileScreen = () => {
            await profileImage({imageUrl}).unwrap();
        }
     return(
-        <Container className='justify-content-center aligin-items-center m-3'>
-
-            {userInfo.imageUrl? (
-                <>
-                   <Row>
-                      <Col>
-                           <Image src={imageUrl} rounded />
-                      </Col>
-                   </Row>
-                </>
-             ):(
-                <Form onSubmit={handleSubmit}>
-                { !imageUrl?  ( 
-                    <Form.Group controlId="formFile" className="mb-3">
-                       <Form.Control size='sm'
-                                     type="file"
-                                     onChange={handleImage} />
-                       <Form.Label>Choose your Profile Picture </Form.Label> 
-                       </Form.Group>
-                       
-                   ):(
-                        <div className='d-flex flex-column align-items-center gap-2'>
-                         <Image src={imageUrl} rounded alt="Profile Picture" width="200" height="180" />
-                         <Button type='submit' variant='secondary' size="sm" className="mt-2">Set Image</Button>
-                        </div>
-                   )}           
-                </Form> 
-            ) }
-
-            <Row>
-                <Col xs={6} md={4} className='aligin-items-center'>
-                   <h4>{userInfo.name}</h4>
-                </Col>
-            </Row>
-            <Row>
-                <Col xs={6} md={4} className='aligin-items-center' >
-                   <h6>{userInfo.email}</h6>
-                </Col>
-            </Row>
-            
-        </Container>
+        <Container className="d-flex flex-column justify-content-center align-items-center mt-3">
+        {userInfo.imageUrl ? (
+          <Row className="mb-3">
+            <Col className="d-flex justify-content-center">
+              <Image src={imageUrl} roundedCircle alt="Profile Picture" width="200" height="200" />
+            </Col>
+          </Row>
+        ) : (
+          <Form onSubmit={handleSubmit} className="d-flex flex-column align-items-center">
+            {!imageUrl ? (
+              <Form.Group controlId="formFile" className="mb-3 d-flex flex-column align-items-center">
+                <Form.Control
+                  size="sm"
+                  type="file"
+                  onChange={handleImage}
+                  className="w-75"
+                />
+                <Form.Label className="mt-2">Choose your Profile Picture</Form.Label>
+              </Form.Group>
+            ) : (
+              <div className="d-flex flex-column align-items-center gap-2">
+                <Image src={imageUrl} rounded alt="Profile Picture" width="200" height="180" />
+                <Button type="submit" variant="secondary" size="sm" className="mt-2">
+                  Set Image
+                </Button>
+              </div>
+            )}
+          </Form>
+        )}
+  
+        <Row className="text-center mt-3">
+          <Col xs={12} className="d-flex justify-content-center">
+            <h4>{userInfo.name}</h4>
+          </Col>
+        </Row>
+  
+        <Row className="text-center">
+          <Col xs={12} className="d-flex justify-content-center">
+            <h6>{userInfo.email}</h6>
+          </Col>
+        </Row>
+      </Container>
     )
 }
 export default ProfileScreen;

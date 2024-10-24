@@ -16,11 +16,8 @@ const registerUser = asyncHandler(async(req,res) => {
         throw new Error('User already Exists... !!');
     }
     const salt = await bcrypt.genSalt(10);
-    console.log(salt);
-    
     const pwd = await  bcrypt.hash(password,salt);
-    console.log("pwd",pwd);
-    
+        
     const user = await User.create({
          name,
          email,
@@ -66,23 +63,33 @@ const getUserProfile = asyncHandler(async(req,res) => {
 
 const updateUserProfile = asyncHandler(async(req,res) => {
     console.log('Inside get user Profile--Update !');
+    console.log(req.body);
     const user = await User.findById(req.user._id);
+   
     if(user){
-         user.name = req.body.name || user.name;
-         user.email = req.body.email || user.email;
-    if(req.body.password){
-        user.password = req.body.password;
-    }
-    const updatedUser = await user.save();
-    res.status(200).json('Update  User Profile  !!');
+         user.name = req.body.name ;
+         user.email = req.body.email ;
+      const updatedUser = await user.save();
+      console.log("updated Data",updatedUser);
+    res.status(201).json({
+        _id:updatedUser._id,
+        name: updatedUser.name,
+        email:updatedUser.email,
+    });
 }else{
-      res.status(401).json({message:'Invalid !'});
+      res.status(401).json({message:' Failed!'});
 }
 });
+
 const authUser = asyncHandler(async(req,res) => {
     const {email,password} =req.body;
     console.log("Indside auth user ::",req.body)
     const user =await User.findOne({email});
+    if(user.isAdmin){
+        console.log("Admin...");
+        res.status(400);
+        throw new Error("You are not a Authorized User !");
+    }
     const pwd = await bcrypt.compare(password,user.password);
     if(user && pwd){
          generateToken(res,user._id);
