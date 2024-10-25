@@ -27,10 +27,10 @@ export const userApiSlice = apiSlice.injectEndpoints({
          credentials: 'include',
       })
      }),
-      profileImage : builder.mutation({
-           query: (data) => ({
+     profileImage : builder.mutation({
+           query: (data) => ({  
               url:`${USERS_URL}/setProfileImage`,
-              method:'PUT',
+              method:'POST',
               body: data,
               credentials: 'include',
            })

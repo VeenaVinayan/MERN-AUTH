@@ -3,6 +3,7 @@ import asyncHandler from 'express-async-handler';
 import User from '../models/userModel.js';
 import generateToken from '../utils/generateToken.js';
 import bcrypt from 'bcryptjs';
+import mongoose from 'mongoose'
 
 const registerUser = asyncHandler(async(req,res) => {
     const {name, email, password } = req.body;
@@ -64,17 +65,22 @@ const getUserProfile = asyncHandler(async(req,res) => {
 const updateUserProfile = asyncHandler(async(req,res) => {
     console.log('Inside get user Profile--Update !');
     console.log(req.body);
+    console.log(req.user._id);
+          
     const user = await User.findById(req.user._id);
+    console.log("user",user);
    
     if(user){
          user.name = req.body.name ;
          user.email = req.body.email ;
+           
       const updatedUser = await user.save();
       console.log("updated Data",updatedUser);
     res.status(201).json({
         _id:updatedUser._id,
         name: updatedUser.name,
         email:updatedUser.email,
+        image:updatedUser.image,
     });
 }else{
       res.status(401).json({message:' Failed!'});
@@ -96,7 +102,8 @@ const authUser = asyncHandler(async(req,res) => {
          res.status(201).json({
              _id:user._id,
              name: user.name,
-             email:email,
+             email:user.email,
+             image:'http://localhost:7000/uploads/'+user.image,
          });
     }else{
         res.status(401);
@@ -104,11 +111,35 @@ const authUser = asyncHandler(async(req,res) => {
     }
 });
 const setProfileImage = asyncHandler(async(req,res) => {
-    console.log('Update Profile !!!!');
-    const image = req.body.image;
-    const id = req.user._id; 
-    await User.findByIdAndUpdate(id,{image:image});
-});
+    try{
+        console.log('Update Profile  picture ');
+        const user = await User.findById(req.user._id);
+         console.log("user",user);
+         console.log(" Image ::"+ JSON.stringify(req.file)) ; 
+                    
+         const value= req.file.filename;
+        console.log("User Data ::",+ value.filename);
+        if(user){
+             const updated = await User.updateOne({_id:req.user._id}, {
+                $set: {
+                     image:value
+                }
+             });
+             console.log("Updated value ::"+updated);
+             res.status(201).json({
+                _id:updated._id,
+                 name:updated.name,
+                 email:updated.email,
+                 
+             });
+        }else{
+             res.status(400).json('Failed !!')
+        }
+    }catch(err){
+         res.status(400);
+         throw new Error('Profile image Error !!')
+    }
+ });
 
 export  {
     authUser,

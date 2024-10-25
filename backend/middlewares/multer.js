@@ -1,16 +1,23 @@
 import multer from 'multer';
-import path  from 'path';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-// Initialize a storage engine for multer
+// Get __dirname equivalent in ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const storage = multer.diskStorage({
-     destination : (req,file,callBack) =>{
-     callBack(null,path.join(__dirname,'../public/images'));
-    },
-    
-    filename :(req,file,callBack) => {
-        const uniqueName = Date.now()+ ' '+file.originalname;
-        callBack(null,uniqueName);
-    }
+  destination: function (req, file, cb) {
+    const uploadPath = path.join(__dirname, '../uploads');
+    console.log("Saving to uploads folder");
+    cb(null, uploadPath);  // Save to uploads folder
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now();
+    cb(null, uniqueSuffix + '-' + file.originalname);  // Use a unique name
+  }
 });
 
-export default multer({storage :storage });
+const upload = multer({ storage: storage });
+
+export default upload;

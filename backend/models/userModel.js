@@ -15,13 +15,14 @@ const userSchema =mongoose.Schema({
    },
    image: {
       type:String,
+      default:'abc.jpg',
    },
    isAdmin: {
       type:Boolean,
       default:false,
    }
-}, {
-     timestamps : true
+},{
+    timestamps : true
 });
 
 // userSchema.pre('save', async function (next) {

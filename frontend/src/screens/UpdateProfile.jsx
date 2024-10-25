@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import {Form ,Button, Row, Col} from 'react-bootstrap';
+import {Form ,Button, Row, Col,Image} from 'react-bootstrap';
 import FormContainer from "../components/FormContainer";
 
 import React from 'react';
@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 
 const UpdateProfile = () => {
   const { userInfo } = useSelector( (state) => state.auth);
-
+ 
   const [ email, setEmail] = useState();
   const [ name, setName] = useState();  
   const navigate = useNavigate();
@@ -23,6 +23,7 @@ const UpdateProfile = () => {
          setEmail(userInfo.email);
          setName(userInfo.name);
    },[userInfo.email,userInfo.name,setCredentials]);  
+   
 
   const submitHandler = async (e) => {
        e.preventDefault();
@@ -57,6 +58,7 @@ const UpdateProfile = () => {
                                 onChange={(e) => setEmail(e.target.value)}>
                   </Form.Control>
               </Form.Group>
+                                     
              { isLoading &&  <Loader /> }
 
               <Button type='submit'>Update Profile</Button> 
@@ -65,4 +67,5 @@ const UpdateProfile = () => {
     </div>
   )
 }
+
 export default UpdateProfile;
